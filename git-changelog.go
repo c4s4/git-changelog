@@ -97,7 +97,7 @@ func parseGitLogs(logs []byte) ([]commit, error) {
 // - changelog in markdown format as string
 func generateMarkdown(commits []commit) string {
 	var builder strings.Builder
-	builder.WriteString("# Changelog\n\n")
+	builder.WriteString("# Changelog\n")
 	for _, commit := range commits {
 		version := ""
 		for _, tag := range commit.Tags {
