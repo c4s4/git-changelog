@@ -12,7 +12,8 @@ import (
 )
 
 const (
-	help = `git-changelog [-help] [-version] [-file changelog]
+	// Help as printed with -help option
+	Help = `git-changelog [-help] [-version] [-file changelog]
 Print markdown changelog from git logs:
 -help           To print this help
 -version        To print version
@@ -116,7 +117,7 @@ func generateMarkdown(commits []commit) string {
 func main() {
 	help, version, file := parseCommandLine()
 	if *help {
-		fmt.Println(help)
+		fmt.Println(Help)
 		os.Exit(0)
 	}
 	if *version {

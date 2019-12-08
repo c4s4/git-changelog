@@ -49,6 +49,15 @@ This prints the changelog on the terminal. You can also write changelog in a fil
 $ git-changelog -file CHANGELOG.md
 ```
 
-To get help, type `git-changelog -help` on command line.
+To get help, type `git-changelog -help` on command line:
+
+```bash
+$ git-changelog -help
+git-changelog [-help] [-version] [-file changelog]
+Print markdown changelog from git logs:
+-help           To print this help
+-version        To print version
+-file changelog To write changelog in given file
+```
 
 *Enjoy!*
