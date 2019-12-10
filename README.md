@@ -2,6 +2,8 @@
 
 This tool generates a Markdown changelog from Git logs.
 
+![](spirale.png)
+
 ## Installation
 
 ### Unix users (Linux, BSDs and MacOSX)
