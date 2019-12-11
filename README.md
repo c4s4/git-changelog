@@ -29,7 +29,7 @@ Otherwise, you can download latest binary archive at <https://github.com/c4s4/gi
 To generate a Markdown changelog from Git logs, go in the repository directory and type:
 
 ```bash
-$ git-changelog
+$ git changelog
 # Changelog
 
 ## 1.0.1 (2019-12-02)
@@ -46,14 +46,14 @@ $ git-changelog
 This prints the changelog on the terminal. You can also write changelog in a file with *-file* option:
 
 ```bash
-$ git-changelog -file CHANGELOG.md
+$ git changelog -file CHANGELOG.md
 ```
 
-To get help, type `git-changelog -help` on command line:
+To get help, type `git changelog -help` on command line:
 
 ```bash
-$ git-changelog -help
-git-changelog [-help] [-version] [-file changelog]
+$ git changelog -help
+git changelog [-help] [-version] [-file changelog]
 Print markdown changelog from git logs:
 -help           To print this help
 -version        To print version
