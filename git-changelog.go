@@ -13,12 +13,15 @@ import (
 
 const (
 	// Help as printed with -help option
-	Help = `git changelog [-help] [-version] [-file changelog]
+	Help = `git changelog [-help] [-version] [-file changelog] [-release regexp]
 Print markdown changelog from git logs:
 -help           To print this help
 -version        To print version
--file changelog To write changelog in given file`
-	dateFormat = "Mon Jan 2 15:04:05 2006 -0700"
+-file changelog To write changelog in given file
+-release regexp To set regexp for releases (defaults to "^(v|V)?\d+.*$")
+-nodate         To omit dates in releases titles`
+	dateFormat    = "Mon Jan 2 15:04:05 2006 -0700"
+	releaseRegexp = `^(v|V)?\d+.*$`
 )
 
 // Version is the version
@@ -28,7 +31,7 @@ var Version = "UNKNOWN"
 var RegexpCommit = regexp.MustCompile(`commit\s+(\w{40})\s*(\(.*?\))?(\n.*)+?\nDate:\s+(.*?)\n\n\s+(.*?)\n`)
 
 // RegexpVersion is the regexp for versions
-var RegexpVersion = regexp.MustCompile(`^(v|V)?\d+.*$`)
+var RegexpVersion *regexp.Regexp
 
 // commit hols a commit data
 type commit struct {
@@ -53,12 +56,16 @@ func (c *commit) Version() string {
 // - help: a boolean that tells if we print help
 // - version: a boolean that tells if we print version
 // - file: a string that is the output file
-func parseCommandLine() (*bool, *bool, *string) {
+// - release: release version regexp
+// - nodate: a boolean that tells if dates should be omitted
+func parseCommandLine() (*bool, *bool, *string, *string, *bool) {
 	help := flag.Bool("help", false, "Print help")
 	version := flag.Bool("version", false, "Print version")
 	file := flag.String("file", "", "Output file")
+	release := flag.String("release", releaseRegexp, "Regexp for releases")
+	nodate := flag.Bool("nodate", false, "Omit date in release titles")
 	flag.Parse()
-	return help, version, file
+	return help, version, file, release, nodate
 }
 
 // gitLogsDecorate returns git logs with tags:
@@ -107,7 +114,7 @@ func parseGitLogs(logs []byte) ([]commit, error) {
 // - commits
 // Return
 // - changelog in markdown format as string
-func generateMarkdown(commits []commit) string {
+func generateMarkdown(commits []commit, nodate bool) string {
 	var builder strings.Builder
 	builder.WriteString("# Changelog\n")
 	if len(commits) > 0 && commits[0].Version() == "" {
@@ -116,7 +123,11 @@ func generateMarkdown(commits []commit) string {
 	for _, commit := range commits {
 		version := commit.Version()
 		if version != "" {
-			builder.WriteString("\n## Release " + version + " (" + commit.Date + ")\n\n")
+			if nodate {
+				builder.WriteString("\n## Release " + version + "\n\n")
+			} else {
+				builder.WriteString("\n## Release " + version + " (" + commit.Date + ")\n\n")
+			}
 		}
 		builder.WriteString("- " + commit.Message + "\n")
 	}
@@ -124,7 +135,7 @@ func generateMarkdown(commits []commit) string {
 }
 
 func main() {
-	help, version, file := parseCommandLine()
+	help, version, file, release, nodate := parseCommandLine()
 	if *help {
 		fmt.Println(Help)
 		os.Exit(0)
@@ -132,6 +143,12 @@ func main() {
 	if *version {
 		fmt.Println(Version)
 		os.Exit(0)
+	}
+	var err error
+	RegexpVersion, err = regexp.Compile(*release)
+	if err != nil {
+		println(fmt.Sprintf("Error compiling release regexp: %v", err))
+		os.Exit(3)
 	}
 	logs, err := gitLogsDecorate()
 	if err != nil {
@@ -143,7 +160,7 @@ func main() {
 		println(err.Error())
 		os.Exit(2)
 	}
-	markdown := generateMarkdown(commits)
+	markdown := generateMarkdown(commits, *nodate)
 	if *file == "" {
 		fmt.Print(markdown)
 	} else {

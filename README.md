@@ -51,15 +51,24 @@ This prints the changelog on the terminal. You can also write changelog in a fil
 $ git changelog -file CHANGELOG.md
 ```
 
+You can also change regular expression for release versions with *-release* option. Let's say that your version numbers are dates in ISO format, you would generate changelog with following command:
+
+```bash
+$ git changelog -release '^\d{4}-\d{2}-\d{2}$'
+```
+
+You can omit dates in release titles with *-nodate* option.
+
 To get help, type `git changelog -help` on command line:
 
 ```bash
-$ git changelog -help
-git changelog [-help] [-version] [-file changelog]
+$ git changelog [-help] [-version] [-file changelog]
 Print markdown changelog from git logs:
 -help           To print this help
 -version        To print version
 -file changelog To write changelog in given file
+-release regexp To set regexp for releases (defaults to "^(v|V)?\d+.*$")
+-nodate         To omit dates in releases titles
 ```
 
 *Enjoy!*
