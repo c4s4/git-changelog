@@ -13,7 +13,7 @@ import (
 
 const (
 	// Help as printed with -help option
-	Help = `git-changelog [-help] [-version] [-file changelog]
+	Help = `git changelog [-help] [-version] [-file changelog]
 Print markdown changelog from git logs:
 -help           To print this help
 -version        To print version
@@ -36,6 +36,17 @@ type commit struct {
 	Tags    []string
 	Date    string
 	Message string
+}
+
+// Version returns version in commit of empty string
+func (c *commit) Version() string {
+	version := ""
+	for _, tag := range c.Tags {
+		if RegexpVersion.MatchString(tag) {
+			version = tag
+		}
+	}
+	return version
 }
 
 // parseCommandLine parses command line and returns:
@@ -99,13 +110,11 @@ func parseGitLogs(logs []byte) ([]commit, error) {
 func generateMarkdown(commits []commit) string {
 	var builder strings.Builder
 	builder.WriteString("# Changelog\n")
+	if len(commits) > 0 && commits[0].Version() == "" {
+		builder.WriteString("\n")
+	}
 	for _, commit := range commits {
-		version := ""
-		for _, tag := range commit.Tags {
-			if RegexpVersion.MatchString(tag) {
-				version = tag
-			}
-		}
+		version := commit.Version()
 		if version != "" {
 			builder.WriteString("\n## Release " + version + " (" + commit.Date + ")\n\n")
 		}
