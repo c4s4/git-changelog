@@ -18,10 +18,10 @@ Print markdown changelog from git logs:
 -help           To print this help
 -version        To print version
 -file changelog To write changelog in given file
--release regexp To set regexp for releases (defaults to "^(v|V)?\d+.*$")
+-tag regexp     To set regexp for release tags (defaults to "^(v|V)?\d+.*$")
 -nodate         To omit dates in releases titles`
-	dateFormat    = "Mon Jan 2 15:04:05 2006 -0700"
-	releaseRegexp = `^(v|V)?\d+.*$`
+	dateFormat       = "Mon Jan 2 15:04:05 2006 -0700"
+	defaultRegexpTag = `^(v|V)?\d+.*$`
 )
 
 // Version is the version
@@ -30,8 +30,8 @@ var Version = "UNKNOWN"
 // RegexpCommit is the regexp for commits
 var RegexpCommit = regexp.MustCompile(`commit\s+(\w{40})\s*(\(.*?\))?(\n.*)+?\nDate:\s+(.*?)\n\n\s+(.*?)\n`)
 
-// RegexpVersion is the regexp for versions
-var RegexpVersion *regexp.Regexp
+// RegexpTag is the regexp for version tags
+var RegexpTag *regexp.Regexp
 
 // commit hols a commit data
 type commit struct {
@@ -45,7 +45,7 @@ type commit struct {
 func (c *commit) Version() string {
 	version := ""
 	for _, tag := range c.Tags {
-		if RegexpVersion.MatchString(tag) {
+		if RegexpTag.MatchString(tag) {
 			version = tag
 		}
 	}
@@ -56,16 +56,16 @@ func (c *commit) Version() string {
 // - help: a boolean that tells if we print help
 // - version: a boolean that tells if we print version
 // - file: a string that is the output file
-// - release: release version regexp
+// - tag: release tag regexp
 // - nodate: a boolean that tells if dates should be omitted
 func parseCommandLine() (*bool, *bool, *string, *string, *bool) {
 	help := flag.Bool("help", false, "Print help")
 	version := flag.Bool("version", false, "Print version")
 	file := flag.String("file", "", "Output file")
-	release := flag.String("release", releaseRegexp, "Regexp for releases")
+	tag := flag.String("tag", defaultRegexpTag, "Regexp for release tags")
 	nodate := flag.Bool("nodate", false, "Omit date in release titles")
 	flag.Parse()
-	return help, version, file, release, nodate
+	return help, version, file, tag, nodate
 }
 
 // gitLogsDecorate returns git logs with tags:
@@ -145,9 +145,9 @@ func main() {
 		os.Exit(0)
 	}
 	var err error
-	RegexpVersion, err = regexp.Compile(*release)
+	RegexpTag, err = regexp.Compile(*release)
 	if err != nil {
-		println(fmt.Sprintf("Error compiling release regexp: %v", err))
+		println(fmt.Sprintf("Error compiling release tags regexp: %v", err))
 		os.Exit(3)
 	}
 	logs, err := gitLogsDecorate()

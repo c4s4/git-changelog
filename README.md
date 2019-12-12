@@ -67,7 +67,7 @@ Print markdown changelog from git logs:
 -help           To print this help
 -version        To print version
 -file changelog To write changelog in given file
--release regexp To set regexp for releases (defaults to "^(v|V)?\d+.*$")
+-tag regexp     To set regexp for release tags (defaults to "^(v|V)?\d+.*$")
 -nodate         To omit dates in releases titles
 ```
 
