@@ -13,7 +13,7 @@ import (
 
 const (
 	// Help as printed with -help option
-	Help = `git changelog [-help] [-version] [-file changelog] [-release regexp]
+	Help = `git changelog [-help] [-version] [-file changelog] [-tag regexp] [-nodate]
 Print markdown changelog from git logs:
 -help           To print this help
 -version        To print version
