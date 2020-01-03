@@ -1,5 +1,10 @@
 # Git Changelog
 
+[![Build Status](https://travis-ci.org/c4s4/git-changelog.svg?branch=master)](https://travis-ci.org/c4s4/git-changelog)
+[![Code Quality](https://goreportcard.com/badge/github.com/c4s4/git-changelog)](https://goreportcard.com/report/github.com/c4s4/git-changelog)
+[![Codecov](https://codecov.io/gh/c4s4/git-changelog/branch/master/graph/badge.svg)](https://codecov.io/gh/c4s4/git-changelog)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
 This tool generates a Markdown changelog from Git logs.
 
 ![](spirale.png)
