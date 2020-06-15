@@ -16,13 +16,13 @@ This tool generates a Markdown changelog from Git logs.
 Unix users may download and install latest *git-changelog* release with command:
 
 ```bash
-sh -c "$(curl http://sweetohm.net/dist/git-changelog/install)"
+sh -c "$(curl https://sweetohm.net/dist/git-changelog/install)"
 ```
 
 If *curl* is not installed on you system, you might run:
 
 ```bash
-sh -c "$(wget -O - http://sweetohm.net/dist/git-changelog/install)"
+sh -c "$(wget -O - https://sweetohm.net/dist/git-changelog/install)"
 ```
 
 **Note:** Some directories are protected, even as *root*, on **MacOSX** (since *El Capitan* release), thus you can't install *git-changelog* in */usr/bin* for instance.
